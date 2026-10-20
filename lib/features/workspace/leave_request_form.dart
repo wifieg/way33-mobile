@@ -25,7 +25,9 @@ class _LeaveRequestFormState extends State<LeaveRequestForm> {
   }
 
   void _submit() {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
     widget.repository.requestLeave(
       days: parseLeaveDays(_days.text)!,
       reason: _reason.text,

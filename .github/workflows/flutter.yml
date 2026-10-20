@@ -2,8 +2,13 @@ name: Flutter employee app
 
 on:
   push:
+    branches: [main, develop]
   pull_request:
   workflow_dispatch:
+
+concurrency:
+  group: flutter-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -19,6 +24,16 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
+      - name: Format Dart sources
+        run: |
+          dart format lib test
+          git diff -- lib test > /tmp/way33-format.patch
+      - uses: actions/upload-artifact@v4
+        with:
+          name: way33-source-preparation
+          path: |
+            /tmp/way33-format.patch
+            pubspec.lock
       - run: flutter analyze
       - run: flutter test
       - uses: actions/setup-java@v4

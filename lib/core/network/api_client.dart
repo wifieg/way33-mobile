@@ -29,7 +29,9 @@ class ApiClient {
       throw ApiException(response.statusCode, 'Server request failed');
     }
     final data = jsonDecode(utf8.decode(response.bodyBytes));
-    if (data is! Map<String, dynamic>) throw const FormatException('Invalid JSON object');
+    if (data is! Map<String, dynamic>) {
+      throw const FormatException('Invalid JSON object');
+    }
     return data;
   }
 }

@@ -49,13 +49,17 @@ class DemoRepository extends ChangeNotifier {
   bool get canCheckOut => checkedInAt != null && checkedOutAt == null;
 
   void checkIn() {
-    if (!canCheckIn) return;
+    if (!canCheckIn) {
+      return;
+    }
     _checkedInAt = _clock();
     notifyListeners();
   }
 
   void checkOut() {
-    if (!canCheckOut) return;
+    if (!canCheckOut) {
+      return;
+    }
     _checkedOutAt = _clock();
     notifyListeners();
   }

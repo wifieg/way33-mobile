@@ -27,7 +27,9 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     final saved = await Navigator.of(context).push<bool>(MaterialPageRoute<bool>(
       builder: (_) => LeaveRequestForm(repository: _repository),
     ));
-    if (!mounted || saved != true) return;
+    if (!mounted || saved != true) {
+      return;
+    }
     setState(() => _selected = 1);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(context.text('حُفظ الطلب في الجلسة التجريبية.',

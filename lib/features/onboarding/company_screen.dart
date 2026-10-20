@@ -30,7 +30,9 @@ class _CompanyScreenState extends State<CompanyScreen> {
   }
 
   void _continue() {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
     Navigator.of(context).push(MaterialPageRoute<void>(
       builder: (_) => LoginScreen(
         company: CompanyConnection.parse(_domain.text),
