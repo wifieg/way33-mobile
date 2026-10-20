@@ -4,23 +4,36 @@ class AppTheme {
   static const navy = Color(0xFF143D68);
   static const blue = Color(0xFF1F67B1);
   static const green = Color(0xFF20A47B);
-  static ThemeData light() {
-    final scheme = ColorScheme.fromSeed(seedColor: blue, primary: blue, secondary: green);
+  static ThemeData light() => _build(Brightness.light);
+  static ThemeData dark() => _build(Brightness.dark);
+
+  static ThemeData _build(Brightness brightness) {
+    final scheme = ColorScheme.fromSeed(
+      seedColor: blue,
+      brightness: brightness,
+    );
     return ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
-      scaffoldBackgroundColor: const Color(0xFFF6F8FC),
-      appBarTheme: const AppBarTheme(backgroundColor: Color(0xFFF6F8FC), centerTitle: false),
+      scaffoldBackgroundColor: scheme.surface,
+      appBarTheme: AppBarTheme(backgroundColor: scheme.surface, centerTitle: false),
       inputDecorationTheme: InputDecorationTheme(
-        filled: true, fillColor: Colors.white,
+        filled: true, fillColor: scheme.surfaceContainerLowest,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Color(0xFFDCE4F0))),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(
-        backgroundColor: blue, foregroundColor: Colors.white, minimumSize: const Size.fromHeight(52),
+        backgroundColor: scheme.primary, foregroundColor: scheme.onPrimary, minimumSize: const Size.fromHeight(52),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
       )),
-      cardTheme: CardThemeData(color: Colors.white, elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18))),
+      outlinedButtonTheme: OutlinedButtonThemeData(style: OutlinedButton.styleFrom(
+        minimumSize: const Size.fromHeight(52),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+      )),
+      textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(
+        minimumSize: const Size(48, 48),
+      )),
+      cardTheme: CardThemeData(color: scheme.surfaceContainerLowest, elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18))),
     );
   }
 }

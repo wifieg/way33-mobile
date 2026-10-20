@@ -6,17 +6,26 @@ import 'features/onboarding/company_screen.dart';
 void main() => runApp(const WayErpApp());
 
 class WayErpApp extends StatefulWidget {
-  const WayErpApp({super.key});
+  final Locale initialLocale;
+  final ThemeMode themeMode;
+
+  const WayErpApp({
+    super.key,
+    this.initialLocale = const Locale('ar'),
+    this.themeMode = ThemeMode.system,
+  });
   @override
   State<WayErpApp> createState() => _WayErpAppState();
 }
 
 class _WayErpAppState extends State<WayErpApp> {
-  Locale locale = const Locale('ar');
+  late Locale locale = widget.initialLocale;
   @override
   Widget build(BuildContext context) => MaterialApp(
     title: 'Way ERP', debugShowCheckedModeBanner: false,
     theme: AppTheme.light(),
+    darkTheme: AppTheme.dark(),
+    themeMode: widget.themeMode,
     locale: locale,
     supportedLocales: const [Locale('ar'), Locale('en')],
     localizationsDelegates: const [

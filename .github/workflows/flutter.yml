@@ -1,0 +1,36 @@
+name: Flutter employee app
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.7'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Generate Android platform with the official Flutter tool
+        run: |
+          flutter create --empty --platforms=android --project-name way_erp_mobile --org com.way33 /tmp/way33_android_shell
+          cp -R /tmp/way33_android_shell/android ./android
+      - run: flutter build apk --debug --dart-define=DEMO_MODE=true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: way33-employee-demo-android
+          path: build/app/outputs/flutter-apk/app-debug.apk
