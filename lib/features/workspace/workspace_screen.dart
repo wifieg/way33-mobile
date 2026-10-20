@@ -24,7 +24,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   }
 
   Future<void> _newRequest() async {
-    final saved = await Navigator.of(context).push<bool>(MaterialPageRoute<bool>(
+    final saved =
+        await Navigator.of(context).push<bool>(MaterialPageRoute<bool>(
       builder: (_) => LeaveRequestForm(repository: _repository),
     ));
     if (!mounted || saved != true) {
@@ -56,7 +57,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   Widget _home() => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _heading(context.text('أهلًا بك، موظف تجريبي', 'Hello, demo employee')),
+          _heading(
+              context.text('أهلًا بك، موظف تجريبي', 'Hello, demo employee')),
           Text(context.text('خدماتك اليومية في مكان واحد.',
               'Your everyday services in one place.')),
           const SizedBox(height: 24),
@@ -70,21 +72,27 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
                   'One local attendance trial per session. No actual company attendance is recorded.',
                 )),
                 const SizedBox(height: 16),
-                _row(context.text('وقت الحضور', 'Check-in'), _time(_repository.checkedInAt)),
-                _row(context.text('وقت الانصراف', 'Check-out'), _time(_repository.checkedOutAt)),
+                _row(context.text('وقت الحضور', 'Check-in'),
+                    _time(_repository.checkedInAt)),
+                _row(context.text('وقت الانصراف', 'Check-out'),
+                    _time(_repository.checkedOutAt)),
                 const SizedBox(height: 16),
                 ElevatedButton.icon(
                   key: const Key('check-in'),
-                  onPressed: _repository.canCheckIn ? _repository.checkIn : null,
+                  onPressed:
+                      _repository.canCheckIn ? _repository.checkIn : null,
                   icon: const Icon(Icons.login),
-                  label: Text(context.text('تجربة تسجيل الحضور', 'Try check-in')),
+                  label:
+                      Text(context.text('تجربة تسجيل الحضور', 'Try check-in')),
                 ),
                 const SizedBox(height: 8),
                 OutlinedButton.icon(
                   key: const Key('check-out'),
-                  onPressed: _repository.canCheckOut ? _repository.checkOut : null,
+                  onPressed:
+                      _repository.canCheckOut ? _repository.checkOut : null,
                   icon: const Icon(Icons.logout),
-                  label: Text(context.text('تجربة تسجيل الانصراف', 'Try check-out')),
+                  label: Text(
+                      context.text('تجربة تسجيل الانصراف', 'Try check-out')),
                 ),
               ],
             ),
@@ -103,7 +111,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
                 OutlinedButton.icon(
                   onPressed: _newRequest,
                   icon: const Icon(Icons.add),
-                  label: Text(context.text('طلب إجازة تجريبي', 'Demo leave request')),
+                  label: Text(
+                      context.text('طلب إجازة تجريبي', 'Demo leave request')),
                 ),
               ],
             ),
@@ -112,7 +121,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
       );
 
   String _status(RequestStatus status) => switch (status) {
-        RequestStatus.pending => context.text('بانتظار المراجعة', 'Pending review'),
+        RequestStatus.pending =>
+          context.text('بانتظار المراجعة', 'Pending review'),
         RequestStatus.approved => context.text('معتمد', 'Approved'),
         RequestStatus.rejected => context.text('مرفوض', 'Rejected'),
       };
@@ -129,13 +139,16 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _heading(context.text('تفاصيل الطلب التجريبي', 'Demo request details')),
+            _heading(
+                context.text('تفاصيل الطلب التجريبي', 'Demo request details')),
             Text(request.id, textDirection: TextDirection.ltr),
             const SizedBox(height: 16),
             _row(context.text('الحالة', 'Status'), _status(request.status)),
             _row(context.text('عدد الأيام', 'Days'), '${request.days}'),
-            _row(context.text('تاريخ الإنشاء', 'Created'),
-                MaterialLocalizations.of(context).formatMediumDate(request.createdAt)),
+            _row(
+                context.text('تاريخ الإنشاء', 'Created'),
+                MaterialLocalizations.of(context)
+                    .formatMediumDate(request.createdAt)),
             const SizedBox(height: 16),
             Text(request.reason),
             const SizedBox(height: 24),
@@ -215,14 +228,21 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
               children: [
                 Text(context.text('صافي الراتب', 'Net salary')),
                 const SizedBox(height: 8),
-                Text('7,000.00', style: Theme.of(context).textTheme.headlineLarge),
+                Text('7,000.00',
+                    style: Theme.of(context).textTheme.headlineLarge),
                 const SizedBox(height: 24),
-                _row(context.text('الراتب الأساسي', 'Basic salary'), '6,000.00'),
-                _row(context.text('بدل السكن', 'Housing allowance'), '1,000.00'),
-                _row(context.text('بدل النقل', 'Transport allowance'), '500.00'),
+                _row(
+                    context.text('الراتب الأساسي', 'Basic salary'), '6,000.00'),
+                _row(
+                    context.text('بدل السكن', 'Housing allowance'), '1,000.00'),
+                _row(
+                    context.text('بدل النقل', 'Transport allowance'), '500.00'),
                 const Divider(),
                 _row(context.text('إجمالي المستحقات', 'Gross pay'), '7,500.00'),
-                _row(context.text('استقطاعات توضيحية', 'Illustrative deductions'), '500.00'),
+                _row(
+                    context.text(
+                        'استقطاعات توضيحية', 'Illustrative deductions'),
+                    '500.00'),
                 const Divider(),
                 _row(context.text('الصافي', 'Net pay'), '7,000.00'),
               ],
@@ -245,23 +265,28 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
               children: [
                 const Icon(Icons.account_circle_outlined, size: 64),
                 const SizedBox(height: 16),
-                _row(context.text('الاسم', 'Name'), context.text('موظف تجريبي', 'Demo employee')),
+                _row(context.text('الاسم', 'Name'),
+                    context.text('موظف تجريبي', 'Demo employee')),
                 _row(context.text('الرقم الوظيفي', 'Employee ID'), 'DEMO-001'),
-                _row(context.text('الشركة', 'Company'), context.text('شركة تجريبية', 'Demo company')),
+                _row(context.text('الشركة', 'Company'),
+                    context.text('شركة تجريبية', 'Demo company')),
               ],
             ),
           ),
           OutlinedButton.icon(
             onPressed: widget.onToggleLanguage,
             icon: const Icon(Icons.language),
-            label: Text(context.text('Switch to English', 'التبديل إلى العربية')),
+            label:
+                Text(context.text('Switch to English', 'التبديل إلى العربية')),
           ),
           const SizedBox(height: 16),
           OutlinedButton.icon(
             key: const Key('sign-out'),
-            onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+            onPressed: () =>
+                Navigator.of(context).popUntil((route) => route.isFirst),
             icon: const Icon(Icons.logout),
-            label: Text(context.text('خروج ومسح التجربة', 'Sign out and clear demo')),
+            label: Text(
+                context.text('خروج ومسح التجربة', 'Sign out and clear demo')),
           ),
         ],
       );
@@ -276,7 +301,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
             actions: [
               IconButton(
                 onPressed: widget.onToggleLanguage,
-                tooltip: context.text('التبديل إلى الإنجليزية', 'Switch to Arabic'),
+                tooltip:
+                    context.text('التبديل إلى الإنجليزية', 'Switch to Arabic'),
                 icon: const Icon(Icons.language),
               ),
             ],
@@ -286,12 +312,16 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
               children: [
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   color: Theme.of(context).colorScheme.secondaryContainer,
                   child: Text(
-                    context.text('نسخة تجريبية · بيانات افتراضية لا تُرسل للشركة',
+                    context.text(
+                        'نسخة تجريبية · بيانات افتراضية لا تُرسل للشركة',
                         'Demo · Sample data, nothing is sent to your company'),
-                    style: TextStyle(color: Theme.of(context).colorScheme.onSecondaryContainer),
+                    style: TextStyle(
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer),
                   ),
                 ),
                 Expanded(
@@ -318,14 +348,22 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
             selectedIndex: _selected,
             onDestinationSelected: (value) => setState(() => _selected = value),
             destinations: [
-              NavigationDestination(icon: const Icon(Icons.home_outlined),
-                  selectedIcon: const Icon(Icons.home), label: context.text('الرئيسية', 'Home')),
-              NavigationDestination(icon: const Icon(Icons.description_outlined),
-                  selectedIcon: const Icon(Icons.description), label: context.text('طلباتي', 'Requests')),
-              NavigationDestination(icon: const Icon(Icons.payments_outlined),
-                  selectedIcon: const Icon(Icons.payments), label: context.text('الراتب', 'Salary')),
-              NavigationDestination(icon: const Icon(Icons.person_outline),
-                  selectedIcon: const Icon(Icons.person), label: context.text('حسابي', 'Account')),
+              NavigationDestination(
+                  icon: const Icon(Icons.home_outlined),
+                  selectedIcon: const Icon(Icons.home),
+                  label: context.text('الرئيسية', 'Home')),
+              NavigationDestination(
+                  icon: const Icon(Icons.description_outlined),
+                  selectedIcon: const Icon(Icons.description),
+                  label: context.text('طلباتي', 'Requests')),
+              NavigationDestination(
+                  icon: const Icon(Icons.payments_outlined),
+                  selectedIcon: const Icon(Icons.payments),
+                  label: context.text('الراتب', 'Salary')),
+              NavigationDestination(
+                  icon: const Icon(Icons.person_outline),
+                  selectedIcon: const Icon(Icons.person),
+                  label: context.text('حسابي', 'Account')),
             ],
           ),
         ),

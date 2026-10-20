@@ -22,20 +22,24 @@ class _WayErpAppState extends State<WayErpApp> {
   late Locale locale = widget.initialLocale;
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'Way ERP', debugShowCheckedModeBanner: false,
-    theme: AppTheme.light(),
-    darkTheme: AppTheme.dark(),
-    themeMode: widget.themeMode,
-    locale: locale,
-    supportedLocales: const [Locale('ar'), Locale('en')],
-    localizationsDelegates: const [
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
-    ],
-    home: CompanyScreen(
-      locale: locale,
-      onToggleLanguage: () => setState(() => locale = locale.languageCode == 'ar' ? const Locale('en') : const Locale('ar')),
-    ),
-  );
+        title: 'Way ERP',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light(),
+        darkTheme: AppTheme.dark(),
+        themeMode: widget.themeMode,
+        locale: locale,
+        supportedLocales: const [Locale('ar'), Locale('en')],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        home: CompanyScreen(
+          locale: locale,
+          onToggleLanguage: () => setState(() => locale =
+              locale.languageCode == 'ar'
+                  ? const Locale('en')
+                  : const Locale('ar')),
+        ),
+      );
 }

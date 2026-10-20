@@ -19,8 +19,10 @@ class ApiClient {
     }
   }
 
-  Future<Map<String, dynamic>> getJson(String path, {String? accessToken}) async {
-    final endpoint = baseUrl.resolve(path.startsWith('/') ? path.substring(1) : path);
+  Future<Map<String, dynamic>> getJson(String path,
+      {String? accessToken}) async {
+    final endpoint =
+        baseUrl.resolve(path.startsWith('/') ? path.substring(1) : path);
     final response = await client.get(endpoint, headers: {
       'Accept': 'application/json',
       if (accessToken != null) 'Authorization': 'Bearer $accessToken',

@@ -24,33 +24,7 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - name: Format Dart sources
-        run: |
-          dart format lib test
-          git diff -- lib test > /tmp/way33-format.patch
-      - name: Generate mobile platforms with the official Flutter tool
-        if: ${{ hashFiles('android/app/src/main/AndroidManifest.xml') == '' }}
-        run: |
-          flutter create --empty --platforms=android,ios --project-name way_erp_mobile --org com.way33 /tmp/way33_mobile_shell
-          cp -R /tmp/way33_mobile_shell/android ./android
-          cp -R /tmp/way33_mobile_shell/ios ./ios
-          cp /tmp/way33_mobile_shell/.metadata ./.metadata
-          python3 - <<'PY'
-          from pathlib import Path
-          manifest = Path('android/app/src/main/AndroidManifest.xml')
-          manifest.write_text(manifest.read_text().replace('android:label="way_erp_mobile"', 'android:label="Way33"'))
-          plist = Path('ios/Runner/Info.plist')
-          plist.write_text(plist.read_text().replace('<string>Way Erp Mobile</string>', '<string>Way33</string>'))
-          PY
-      - name: Preserve generated platform sources
-        run: tar --exclude=local.properties -czf /tmp/way33-platforms.tar.gz android ios .metadata
-      - uses: actions/upload-artifact@v4
-        with:
-          name: way33-source-preparation
-          path: |
-            /tmp/way33-format.patch
-            /tmp/way33-platforms.tar.gz
-            pubspec.lock
+      - run: dart format --output=none --set-exit-if-changed lib test
       - run: flutter analyze
       - run: flutter test
       - uses: actions/setup-java@v4

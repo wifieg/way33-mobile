@@ -61,13 +61,18 @@ class _LeaveRequestFormState extends State<LeaveRequestForm> {
                         controller: _days,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                          labelText: context.text('عدد الأيام', 'Number of days'),
-                          helperText: context.text('من 1 إلى 21 يومًا', '1 to 21 days'),
+                          labelText:
+                              context.text('عدد الأيام', 'Number of days'),
+                          helperText:
+                              context.text('من 1 إلى 21 يومًا', '1 to 21 days'),
                         ),
                         validator: (value) {
                           final days = parseLeaveDays(value ?? '');
-                          return days == null || days < 1 || days > widget.repository.leaveDays
-                              ? context.text('أدخل عددًا من 1 إلى 21.', 'Enter a number from 1 to 21.')
+                          return days == null ||
+                                  days < 1 ||
+                                  days > widget.repository.leaveDays
+                              ? context.text('أدخل عددًا من 1 إلى 21.',
+                                  'Enter a number from 1 to 21.')
                               : null;
                         },
                       ),
@@ -79,16 +84,19 @@ class _LeaveRequestFormState extends State<LeaveRequestForm> {
                         maxLines: 6,
                         maxLength: 500,
                         decoration: InputDecoration(
-                          labelText: context.text('سبب الإجازة', 'Reason for leave'),
+                          labelText:
+                              context.text('سبب الإجازة', 'Reason for leave'),
                         ),
                         validator: (value) => (value ?? '').trim().isEmpty
-                            ? context.text('أدخل سبب الإجازة.', 'Enter a reason for leave.')
+                            ? context.text('أدخل سبب الإجازة.',
+                                'Enter a reason for leave.')
                             : null,
                       ),
                       const SizedBox(height: 24),
                       ElevatedButton(
                         onPressed: _submit,
-                        child: Text(context.text('حفظ الطلب التجريبي', 'Save demo request')),
+                        child: Text(context.text(
+                            'حفظ الطلب التجريبي', 'Save demo request')),
                       ),
                     ],
                   ),

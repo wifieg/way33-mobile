@@ -86,8 +86,9 @@ class _CompanyScreenState extends State<CompanyScreen> {
                       Text('Way33',
                           style: Theme.of(context).textTheme.headlineLarge),
                       const SizedBox(height: 8),
-                      Text(context.text('مساحة عملك، أينما كنت',
-                          'Your workspace, wherever you are'),
+                      Text(
+                          context.text('مساحة عملك، أينما كنت',
+                              'Your workspace, wherever you are'),
                           style: Theme.of(context).textTheme.titleLarge),
                       const SizedBox(height: 12),
                       Text(context.text(
@@ -104,7 +105,8 @@ class _CompanyScreenState extends State<CompanyScreen> {
                         textInputAction: TextInputAction.go,
                         onFieldSubmitted: (_) => _continue(),
                         decoration: InputDecoration(
-                          labelText: context.text('رابط الشركة', 'Company domain'),
+                          labelText:
+                              context.text('رابط الشركة', 'Company domain'),
                           hintText: 'company.example.com',
                           prefixIcon: const Icon(Icons.link),
                         ),

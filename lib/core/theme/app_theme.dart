@@ -16,24 +16,38 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: scheme,
       scaffoldBackgroundColor: scheme.surface,
-      appBarTheme: AppBarTheme(backgroundColor: scheme.surface, centerTitle: false),
+      appBarTheme:
+          AppBarTheme(backgroundColor: scheme.surface, centerTitle: false),
       inputDecorationTheme: InputDecorationTheme(
-        filled: true, fillColor: scheme.surfaceContainerLowest,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Color(0xFFDCE4F0))),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        filled: true,
+        fillColor: scheme.surfaceContainerLowest,
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: Color(0xFFDCE4F0))),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
-      elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(
-        backgroundColor: scheme.primary, foregroundColor: scheme.onPrimary, minimumSize: const Size.fromHeight(52),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
-      )),
-      outlinedButtonTheme: OutlinedButtonThemeData(style: OutlinedButton.styleFrom(
+      elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+        backgroundColor: scheme.primary,
+        foregroundColor: scheme.onPrimary,
         minimumSize: const Size.fromHeight(52),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
       )),
-      textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(
+      outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+        minimumSize: const Size.fromHeight(52),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+      )),
+      textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
         minimumSize: const Size(48, 48),
       )),
-      cardTheme: CardThemeData(color: scheme.surfaceContainerLowest, elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18))),
+      cardTheme: CardThemeData(
+          color: scheme.surfaceContainerLowest,
+          elevation: 0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18))),
     );
   }
 }

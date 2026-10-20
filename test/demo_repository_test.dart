@@ -34,13 +34,17 @@ void main() {
     expect(notifications, 2);
   });
 
-  test('leave requests validate data and retain newest first with unique IDs', () {
+  test('leave requests validate data and retain newest first with unique IDs',
+      () {
     final repository = DemoRepository(clock: () => DateTime(2026, 10, 20));
     addTearDown(repository.dispose);
 
-    expect(() => repository.requestLeave(days: 0, reason: 'Rest'), throwsArgumentError);
-    expect(() => repository.requestLeave(days: 22, reason: 'Rest'), throwsArgumentError);
-    expect(() => repository.requestLeave(days: 1, reason: '  '), throwsArgumentError);
+    expect(() => repository.requestLeave(days: 0, reason: 'Rest'),
+        throwsArgumentError);
+    expect(() => repository.requestLeave(days: 22, reason: 'Rest'),
+        throwsArgumentError);
+    expect(() => repository.requestLeave(days: 1, reason: '  '),
+        throwsArgumentError);
     expect(repository.requests, isEmpty);
 
     final first = repository.requestLeave(days: 3, reason: ' Family visit ');
