@@ -11,7 +11,9 @@ Distribution requested: TestFlight, then public App Store. The owner reports an 
 - CI uses macOS and Xcode 26, verifies iOS SDK >=26, and builds an **unsigned** iOS release archive. Independent iPhone/iPad jobs are configured to run the actual app's demo flow and capture screenshots; job configuration alone is not proof that both devices passed.
 - Widget previews are development renders. Native simulator screenshots are separately labeled. Neither set represents a production ERP connection or physical-device certification.
 
-Verified so far: Xcode 26.3 / iOS SDK 26.2 release archive, bundled app/SDK privacy manifests, 22 unit/widget tests, 24 host previews and an earlier native iPhone flow with 28 screenshots. Native retries stalled before test execution even after allowing more startup time. Logs match Flutter issue #181771; simulator jobs now use a version-checked backport of the official log-readiness fix, isolated from release builds and SDK caches. See the [tool workaround](../scripts/patches/README.md). See [revision-specific results](../UPLOAD_STATUS.md) for status and artifacts. This is preparation for submission, not confirmation of Apple compliance or approval.
+Verified for `210ec6f`: Xcode 26.3 / iOS SDK 26.2 release archive, five bundled app/SDK privacy manifests, 22 unit/widget tests, 24 host previews, and four Arabic/English × light/dark native integration cases on each device. The 56 native PNGs decode at 1206×2622 (iPhone) and 2064×2752 (iPad); representative screens were visually reviewed.
+
+The simulator jobs use a version-checked backport of official Flutter PR #193142 to address missed VM service log events (Flutter issue #181771). The workaround is isolated from release builds and SDK caches; Flutter engine/framework and app source use the pinned official SDK. See the [tool workaround](../scripts/patches/README.md) and [revision-specific results](../UPLOAD_STATUS.md). Successful builds and simulator tests are preparation for submission, not confirmation of Apple compliance or approval.
 
 ## Before signing or submission
 
