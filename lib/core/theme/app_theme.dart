@@ -14,6 +14,7 @@ class AppTheme {
     );
     return ThemeData(
       useMaterial3: true,
+      fontFamily: 'Way33Sans',
       colorScheme: scheme,
       scaffoldBackgroundColor: scheme.surface,
       appBarTheme:

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/localization/app_text.dart';
+import '../account/privacy_screen.dart';
 import 'demo_repository.dart';
 import 'leave_request_form.dart';
 
@@ -278,6 +279,14 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
             icon: const Icon(Icons.language),
             label:
                 Text(context.text('Switch to English', 'التبديل إلى العربية')),
+          ),
+          const SizedBox(height: 16),
+          OutlinedButton.icon(
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+              builder: (_) => const PrivacyScreen(),
+            )),
+            icon: const Icon(Icons.privacy_tip_outlined),
+            label: Text(context.text('الخصوصية', 'Privacy')),
           ),
           const SizedBox(height: 16),
           OutlinedButton.icon(

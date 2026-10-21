@@ -17,17 +17,32 @@ jobs:
   analyze-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.7'
           channel: stable
           cache: true
       - run: flutter pub get
-      - run: dart format --output=none --set-exit-if-changed lib test
+      - name: Prepare formatted source evidence
+        run: |
+          dart format lib test integration_test test_driver
+          git diff -- lib test integration_test test_driver > /tmp/way33-format.patch
+      - uses: actions/upload-artifact@v4
+        with:
+          name: way33-source-preparation
+          path: |
+            /tmp/way33-format.patch
+            pubspec.lock
       - run: flutter analyze
       - run: flutter test
-      - uses: actions/setup-java@v4
+      - run: flutter test test/preview_capture_test.dart --dart-define=CAPTURE_PREVIEWS=true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: way33-widget-previews
+          path: artifacts/widget-previews
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
@@ -36,3 +51,73 @@ jobs:
         with:
           name: way33-employee-demo-android
           path: build/app/outputs/flutter-apk/app-debug.apk
+  ios-verification:
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '26'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.7'
+          channel: stable
+          cache: true
+      - name: Verify Apple SDK baseline
+        run: |
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+          python3 - <<'PY'
+          import subprocess
+          sdk = subprocess.check_output(['xcrun', '--sdk', 'iphoneos', '--show-sdk-version'], text=True).strip()
+          assert int(sdk.split('.')[0]) >= 26, sdk
+          PY
+      - run: flutter pub get
+      - name: Configure screenshot simulators
+        run: python3 scripts/ios_simulators.py
+      - name: Run iPhone flow and capture native screenshots
+        run: |
+          xcrun simctl boot "$WAY33_IPHONE"
+          xcrun simctl bootstatus "$WAY33_IPHONE" -b
+          xcrun simctl status_bar "$WAY33_IPHONE" override --time '9:41' --batteryState charged --batteryLevel 100
+          flutter drive --driver=test_driver/preview_driver.dart --target=integration_test/employee_preview_test.dart -d "$WAY33_IPHONE" --dart-define=DEMO_MODE=true --dart-define=SCREENSHOT_DEVICE=iphone
+          xcrun simctl shutdown "$WAY33_IPHONE"
+      - name: Run iPad flow and capture native screenshots
+        run: |
+          xcrun simctl boot "$WAY33_IPAD"
+          xcrun simctl bootstatus "$WAY33_IPAD" -b
+          xcrun simctl status_bar "$WAY33_IPAD" override --time '9:41' --batteryState charged --batteryLevel 100
+          flutter drive --driver=test_driver/preview_driver.dart --target=integration_test/employee_preview_test.dart -d "$WAY33_IPAD" --dart-define=DEMO_MODE=true --dart-define=SCREENSHOT_DEVICE=ipad
+          xcrun simctl shutdown "$WAY33_IPAD"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: way33-ios-simulator-screenshots
+          path: artifacts/ios-simulator-screenshots
+      - name: Build unsigned iOS release archive
+        run: flutter build ipa --release --no-codesign --dart-define=DEMO_MODE=true
+      - name: Check bundled privacy manifests
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import plistlib
+          app = Path('build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app')
+          root = app / 'PrivacyInfo.xcprivacy'
+          assert root.is_file(), 'App privacy manifest missing from built bundle'
+          with root.open('rb') as handle:
+              manifest = plistlib.load(handle)
+          assert manifest['NSPrivacyTracking'] is False
+          manifests = list(app.rglob('PrivacyInfo.xcprivacy'))
+          for path in manifests:
+              with path.open('rb') as handle:
+                  plistlib.load(handle)
+              print(path.relative_to(app))
+          assert any('shared_preferences' in str(path) for path in manifests), 'Preferences SDK manifest missing'
+          PY
+      - name: Package unsigned archive
+        run: ditto -c -k --sequesterRsrc --keepParent build/ios/archive/Runner.xcarchive artifacts/Way33-unsigned.xcarchive.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: way33-ios-unsigned-archive
+          path: artifacts/Way33-unsigned.xcarchive.zip

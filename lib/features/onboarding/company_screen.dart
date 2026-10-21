@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/config/app_config.dart';
 import '../../core/localization/app_text.dart';
+import '../account/privacy_screen.dart';
 import '../auth/login_screen.dart';
 import 'company_connection.dart';
 
@@ -136,6 +137,16 @@ class _CompanyScreenState extends State<CompanyScreen> {
                               'استكشاف النسخة التجريبية', 'Explore demo')),
                         ),
                       ],
+                      const SizedBox(height: 16),
+                      TextButton.icon(
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const PrivacyScreen(),
+                          ),
+                        ),
+                        icon: const Icon(Icons.privacy_tip_outlined),
+                        label: Text(context.text('الخصوصية', 'Privacy')),
+                      ),
                     ],
                   ),
                 ),
