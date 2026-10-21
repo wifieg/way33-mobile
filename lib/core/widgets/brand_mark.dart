@@ -18,20 +18,23 @@ class BrandMark extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              Center(child: Text('W', style: TextStyle(
-                fontFamily: 'Way33Sans',
-                color: Colors.white,
-                fontWeight: FontWeight.w800,
-                fontSize: size * .6,
-                height: 1,
-              ))),
+              Center(
+                  child: Text('W',
+                      style: TextStyle(
+                        fontFamily: 'Way33Sans',
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        fontSize: size * .6,
+                        height: 1,
+                      ))),
               PositionedDirectional(
                 end: size * .13,
                 bottom: size * .15,
                 child: Container(
                   width: size * .15,
                   height: size * .15,
-                  decoration: const BoxDecoration(color: Color(0xFF55D5B0), shape: BoxShape.circle),
+                  decoration: const BoxDecoration(
+                      color: Color(0xFF55D5B0), shape: BoxShape.circle),
                 ),
               ),
             ],

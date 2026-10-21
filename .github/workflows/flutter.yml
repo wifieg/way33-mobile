@@ -6,15 +6,14 @@ on:
   pull_request:
   workflow_dispatch:
 
-concurrency:
-  group: flutter-${{ github.head_ref || github.ref_name }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
 
 jobs:
   analyze-and-test:
+    concurrency:
+      group: flutter-analysis-${{ github.head_ref || github.ref_name }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -37,6 +36,7 @@ jobs:
       - run: flutter analyze
       - run: flutter test
       - run: flutter test test/preview_capture_test.dart --dart-define=CAPTURE_PREVIEWS=true
+        if: always()
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -52,6 +52,9 @@ jobs:
           name: way33-employee-demo-android
           path: build/app/outputs/flutter-apk/app-debug.apk
   ios-archive:
+    concurrency:
+      group: flutter-ios-archive-${{ github.head_ref || github.ref_name }}
+      cancel-in-progress: false
     runs-on: macos-15
     timeout-minutes: 30
     steps:
@@ -101,6 +104,9 @@ jobs:
           name: way33-ios-unsigned-archive
           path: artifacts/Way33-unsigned.xcarchive.zip
   ios-previews:
+    concurrency:
+      group: flutter-ios-previews-${{ github.head_ref || github.ref_name }}
+      cancel-in-progress: false
     runs-on: macos-15
     timeout-minutes: 30
     steps:
@@ -135,7 +141,7 @@ jobs:
           python3 -c 'import os,subprocess; subprocess.run(["xcrun","simctl","bootstatus",os.environ["WAY33_IPHONE"],"-b"],check=True,timeout=240)'
           xcrun simctl status_bar "$WAY33_IPHONE" override --time '9:41' --batteryState charged --batteryLevel 100
           set -o pipefail
-          flutter drive --driver=test_driver/preview_driver.dart --target=integration_test/employee_preview_test.dart -d "$WAY33_IPHONE" --dart-define=DEMO_MODE=true --dart-define=SCREENSHOT_DEVICE=iphone 2>&1 | tee artifacts/iphone-drive.log
+          flutter drive --no-dds --verbose --driver=test_driver/preview_driver.dart --target=integration_test/employee_preview_test.dart -d "$WAY33_IPHONE" --dart-define=DEMO_MODE=true --dart-define=SCREENSHOT_DEVICE=iphone 2>&1 | tee artifacts/iphone-drive.log
           xcrun simctl shutdown "$WAY33_IPHONE"
       - name: Run iPad flow and capture native screenshots
         timeout-minutes: 10
@@ -144,8 +150,17 @@ jobs:
           python3 -c 'import os,subprocess; subprocess.run(["xcrun","simctl","bootstatus",os.environ["WAY33_IPAD"],"-b"],check=True,timeout=240)'
           xcrun simctl status_bar "$WAY33_IPAD" override --time '9:41' --batteryState charged --batteryLevel 100
           set -o pipefail
-          flutter drive --driver=test_driver/preview_driver.dart --target=integration_test/employee_preview_test.dart -d "$WAY33_IPAD" --dart-define=DEMO_MODE=true --dart-define=SCREENSHOT_DEVICE=ipad 2>&1 | tee artifacts/ipad-drive.log
+          flutter drive --no-dds --verbose --driver=test_driver/preview_driver.dart --target=integration_test/employee_preview_test.dart -d "$WAY33_IPAD" --dart-define=DEMO_MODE=true --dart-define=SCREENSHOT_DEVICE=ipad 2>&1 | tee artifacts/ipad-drive.log
           xcrun simctl shutdown "$WAY33_IPAD"
+      - name: Preserve native device frame for diagnosis
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import os, subprocess
+          for key in ('WAY33_IPHONE', 'WAY33_IPAD'):
+              if os.environ.get(key):
+                  subprocess.run(['xcrun', 'simctl', 'io', os.environ[key], 'screenshot', f'artifacts/{key.lower()}-device.png'], timeout=60, check=False)
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:

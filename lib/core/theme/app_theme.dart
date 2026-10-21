@@ -18,7 +18,8 @@ class AppTheme {
     ).copyWith(
       surface: surface,
       onSurface: dark ? const Color(0xFFF0F5FA) : const Color(0xFF182D42),
-      onSurfaceVariant: dark ? const Color(0xFFB5C3D3) : const Color(0xFF607487),
+      onSurfaceVariant:
+          dark ? const Color(0xFFB5C3D3) : const Color(0xFF607487),
       outlineVariant: line,
     );
     final base = ThemeData(
@@ -78,8 +79,9 @@ class AppTheme {
           color: surface,
           margin: EdgeInsets.zero,
           elevation: 0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: line))),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: BorderSide(color: line))),
       dividerTheme: DividerThemeData(color: line, thickness: 1, space: 24),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: surface,
@@ -88,29 +90,42 @@ class AppTheme {
         height: 80,
         indicatorColor: scheme.primaryContainer,
         labelTextStyle: WidgetStateProperty.resolveWith((states) => TextStyle(
-          fontFamily: 'Way33Sans',
-          fontSize: 12,
-          fontWeight: states.contains(WidgetState.selected) ? FontWeight.w700 : FontWeight.w500,
-          color: states.contains(WidgetState.selected) ? scheme.primary : scheme.onSurfaceVariant,
-        )),
+              fontFamily: 'Way33Sans',
+              fontSize: 12,
+              fontWeight: states.contains(WidgetState.selected)
+                  ? FontWeight.w700
+                  : FontWeight.w500,
+              color: states.contains(WidgetState.selected)
+                  ? scheme.primary
+                  : scheme.onSurfaceVariant,
+            )),
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: navy,
-        contentTextStyle: const TextStyle(color: Colors.white, fontFamily: 'Way33Sans'),
+        contentTextStyle:
+            const TextStyle(color: Colors.white, fontFamily: 'Way33Sans'),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
     );
-    return base.copyWith(textTheme: base.textTheme.copyWith(
-      headlineLarge: base.textTheme.headlineLarge?.copyWith(fontSize: 38, fontWeight: FontWeight.w700),
-      headlineMedium: base.textTheme.headlineMedium?.copyWith(fontSize: 30, fontWeight: FontWeight.w700),
-      headlineSmall: base.textTheme.headlineSmall?.copyWith(fontSize: 26, fontWeight: FontWeight.w700),
-      titleLarge: base.textTheme.titleLarge?.copyWith(fontSize: 20, fontWeight: FontWeight.w700),
-      titleMedium: base.textTheme.titleMedium?.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
+    return base.copyWith(
+        textTheme: base.textTheme.copyWith(
+      headlineLarge: base.textTheme.headlineLarge
+          ?.copyWith(fontSize: 38, fontWeight: FontWeight.w700),
+      headlineMedium: base.textTheme.headlineMedium
+          ?.copyWith(fontSize: 30, fontWeight: FontWeight.w700),
+      headlineSmall: base.textTheme.headlineSmall
+          ?.copyWith(fontSize: 26, fontWeight: FontWeight.w700),
+      titleLarge: base.textTheme.titleLarge
+          ?.copyWith(fontSize: 20, fontWeight: FontWeight.w700),
+      titleMedium: base.textTheme.titleMedium
+          ?.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
       bodyLarge: base.textTheme.bodyLarge?.copyWith(fontSize: 16, height: 1.6),
-      bodyMedium: base.textTheme.bodyMedium?.copyWith(fontSize: 14, height: 1.6),
+      bodyMedium:
+          base.textTheme.bodyMedium?.copyWith(fontSize: 14, height: 1.6),
       bodySmall: base.textTheme.bodySmall?.copyWith(fontSize: 12, height: 1.5),
-      labelLarge: base.textTheme.labelLarge?.copyWith(fontSize: 14, fontWeight: FontWeight.w600),
+      labelLarge: base.textTheme.labelLarge
+          ?.copyWith(fontSize: 14, fontWeight: FontWeight.w600),
     ));
   }
 }

@@ -58,13 +58,16 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         child: Text(title, style: Theme.of(context).textTheme.titleLarge),
       );
 
-  Widget _statTile(IconData icon, String title, String value, String detail) => _card(
+  Widget _statTile(IconData icon, String title, String value, String detail) =>
+      _card(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _iconBadge(icon),
             const SizedBox(height: 16),
-            Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+            Text(title,
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant)),
             const SizedBox(height: 6),
             Text(value, style: Theme.of(context).textTheme.headlineMedium),
             Text(detail, style: Theme.of(context).textTheme.bodySmall),
@@ -84,7 +87,9 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     );
   }
 
-  Widget _serviceTile(IconData icon, String title, String subtitle, VoidCallback onTap) => Card(
+  Widget _serviceTile(
+          IconData icon, String title, String subtitle, VoidCallback onTap) =>
+      Card(
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(20),
@@ -93,19 +98,23 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
             child: Row(children: [
               _iconBadge(icon),
               const SizedBox(width: 14),
-              Expanded(child: Column(
+              Expanded(
+                  child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title, style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 2),
-                  Text(subtitle, style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  )),
+                  Text(subtitle,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                          )),
                 ],
               )),
               const SizedBox(width: 8),
               Icon(context.isArabic ? Icons.chevron_left : Icons.chevron_right,
-                  size: 20, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  size: 20,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
             ]),
           ),
         ),
@@ -114,9 +123,14 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   Widget _attendanceTime(String title, DateTime? time) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontSize: 12, color: Color(0xFFBFCDD9))),
+          Text(title,
+              style: const TextStyle(fontSize: 12, color: Color(0xFFBFCDD9))),
           const SizedBox(height: 6),
-          Text(_time(time), style: const TextStyle(fontSize: 27, fontWeight: FontWeight.w600, color: Colors.white)),
+          Text(_time(time),
+              style: const TextStyle(
+                  fontSize: 27,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white)),
         ],
       );
 
@@ -133,31 +147,49 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Wrap(alignment: WrapAlignment.spaceBetween, spacing: 12, runSpacing: 12, children: [
-              Text(context.text('الحضور التجريبي', 'Demo attendance'),
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white)),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: .1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  _repository.canCheckIn
-                      ? context.text('لم يبدأ الدوام', 'Not checked in')
-                      : _repository.canCheckOut
-                          ? context.text('داخل الدوام', 'Checked in')
-                          : context.text('انتهت التجربة', 'Trial completed'),
-                  style: const TextStyle(fontSize: 11, color: Color(0xFFBCEAD9)),
-                ),
-              ),
-            ]),
+            Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                spacing: 12,
+                runSpacing: 12,
+                children: [
+                  Text(context.text('الحضور التجريبي', 'Demo attendance'),
+                      style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white)),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: .1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      _repository.canCheckIn
+                          ? context.text('لم يبدأ الدوام', 'Not checked in')
+                          : _repository.canCheckOut
+                              ? context.text('داخل الدوام', 'Checked in')
+                              : context.text(
+                                  'انتهت التجربة', 'Trial completed'),
+                      style: const TextStyle(
+                          fontSize: 11, color: Color(0xFFBCEAD9)),
+                    ),
+                  ),
+                ]),
             const SizedBox(height: 26),
             Row(children: [
-              Expanded(child: _attendanceTime(context.text('وقت الحضور', 'Check-in'), _repository.checkedInAt)),
-              Container(width: 1, height: 48, color: Colors.white.withValues(alpha: .15)),
+              Expanded(
+                  child: _attendanceTime(context.text('وقت الحضور', 'Check-in'),
+                      _repository.checkedInAt)),
+              Container(
+                  width: 1,
+                  height: 48,
+                  color: Colors.white.withValues(alpha: .15)),
               const SizedBox(width: 20),
-              Expanded(child: _attendanceTime(context.text('وقت الانصراف', 'Check-out'), _repository.checkedOutAt)),
+              Expanded(
+                  child: _attendanceTime(
+                      context.text('وقت الانصراف', 'Check-out'),
+                      _repository.checkedOutAt)),
             ]),
             const SizedBox(height: 24),
             ElevatedButton.icon(
@@ -182,13 +214,16 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
                 side: BorderSide(color: Colors.white.withValues(alpha: .2)),
               ),
               icon: const Icon(Icons.logout, size: 19),
-              label: Text(context.text('تجربة تسجيل الانصراف', 'Try check-out')),
+              label:
+                  Text(context.text('تجربة تسجيل الانصراف', 'Try check-out')),
             ),
             const SizedBox(height: 12),
-            Text(context.text('تجربة محلية فقط؛ لا تُسجّل بصمة لدى الشركة.',
-                'Local trial only; no company attendance is recorded.'),
+            Text(
+                context.text('تجربة محلية فقط؛ لا تُسجّل بصمة لدى الشركة.',
+                    'Local trial only; no company attendance is recorded.'),
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 11, height: 1.5, color: Color(0xFFBFCDD9))),
+                style: const TextStyle(
+                    fontSize: 11, height: 1.5, color: Color(0xFFBFCDD9))),
           ],
         ),
       );
@@ -197,49 +232,70 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(children: [
-            Expanded(child: Column(
+            Expanded(
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(context.text('أهلًا بك،', 'Welcome back,'),
-                    style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 const SizedBox(height: 3),
-                Text(context.text('موظف تجريبي', 'Demo employee'), style: Theme.of(context).textTheme.headlineSmall),
+                Text(context.text('موظف تجريبي', 'Demo employee'),
+                    style: Theme.of(context).textTheme.headlineSmall),
               ],
             )),
             const SizedBox(width: 16),
             Container(
               padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, shape: BoxShape.circle,
-                  border: Border.all(color: Theme.of(context).colorScheme.outlineVariant)),
-              child: Icon(Icons.person_outline_rounded, color: Theme.of(context).colorScheme.primary, size: 28),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                      color: Theme.of(context).colorScheme.outlineVariant)),
+              child: Icon(Icons.person_outline_rounded,
+                  color: Theme.of(context).colorScheme.primary, size: 28),
             ),
           ]),
           const SizedBox(height: 24),
           _attendance(),
           const SizedBox(height: 20),
           LayoutBuilder(builder: (context, constraints) {
-            final leave = _statTile(Icons.event_available_outlined,
-                context.text('رصيد الإجازات', 'Leave balance'), '21',
+            final leave = _statTile(
+                Icons.event_available_outlined,
+                context.text('رصيد الإجازات', 'Leave balance'),
+                '21',
                 context.text('يومًا · رصيد توضيحي', 'days · sample balance'));
-            final requests = _statTile(Icons.description_outlined,
-                context.text('طلباتك', 'Your requests'), '${_repository.requests.length}',
+            final requests = _statTile(
+                Icons.description_outlined,
+                context.text('طلباتك', 'Your requests'),
+                '${_repository.requests.length}',
                 context.text('طلبات في هذه التجربة', 'requests in this demo'));
-            if (constraints.maxWidth < 320 || MediaQuery.textScalerOf(context).scale(14) > 20) {
-              return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [leave, requests]);
+            if (constraints.maxWidth < 320 ||
+                MediaQuery.textScalerOf(context).scale(14) > 20) {
+              return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [leave, requests]);
             }
             return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Expanded(child: leave), const SizedBox(width: 14), Expanded(child: requests),
+              Expanded(child: leave),
+              const SizedBox(width: 14),
+              Expanded(child: requests),
             ]);
           }),
           const SizedBox(height: 8),
           _heading(context.text('خدماتك السريعة', 'Quick services')),
-          _serviceTile(Icons.add_circle_outline,
+          _serviceTile(
+              Icons.add_circle_outline,
               context.text('طلب إجازة تجريبي', 'Demo leave request'),
-              context.text('أنشئ طلبًا وتابع حالته', 'Create a request and follow its status'), _newRequest),
+              context.text('أنشئ طلبًا وتابع حالته',
+                  'Create a request and follow its status'),
+              _newRequest),
           const SizedBox(height: 12),
-          _serviceTile(Icons.receipt_long_outlined,
+          _serviceTile(
+              Icons.receipt_long_outlined,
               context.text('كشف الراتب', 'View payslip'),
-              context.text('تفاصيل المستحقات والاستقطاعات', 'Review earnings and deductions'),
+              context.text('تفاصيل المستحقات والاستقطاعات',
+                  'Review earnings and deductions'),
               () => setState(() => _selected = 2)),
           const SizedBox(height: 8),
         ],
@@ -320,7 +376,9 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
                 title: Text(context.text('إجازة · ${request.days} يوم',
                     'Leave · ${request.days} days')),
                 subtitle: Text('${request.id}\n${_status(request.status)}'),
-                trailing: Icon(context.isArabic ? Icons.chevron_left : Icons.chevron_right),
+                trailing: Icon(context.isArabic
+                    ? Icons.chevron_left
+                    : Icons.chevron_right),
                 onTap: () => _requestDetails(request),
               ),
             ),
@@ -345,39 +403,62 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         children: [
           _heading(context.text('كشف راتب تجريبي', 'Sample payslip')),
           Text(context.text('سبتمبر 2026', 'September 2026'),
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant)),
           const SizedBox(height: 20),
           Container(
             padding: const EdgeInsets.all(26),
-            decoration: BoxDecoration(color: AppTheme.navy, borderRadius: BorderRadius.circular(24)),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Icon(Icons.account_balance_wallet_outlined, color: Color(0xFFB9F0DC), size: 28),
+            decoration: BoxDecoration(
+                color: AppTheme.navy, borderRadius: BorderRadius.circular(24)),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Icon(Icons.account_balance_wallet_outlined,
+                  color: Color(0xFFB9F0DC), size: 28),
               const SizedBox(height: 22),
               Text(context.text('صافي الراتب', 'Net salary'),
                   style: const TextStyle(color: Color(0xFFBFCDD9))),
               const SizedBox(height: 4),
-              const Text('7,000.00', style: TextStyle(fontSize: 38, fontWeight: FontWeight.w700, color: Colors.white)),
+              const Text('7,000.00',
+                  style: TextStyle(
+                      fontSize: 38,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white)),
               const SizedBox(height: 6),
-              Text(context.text('ريال سعودي · عينة توضيحية', 'Saudi riyals · sample figures'),
-                  style: const TextStyle(fontSize: 12, color: Color(0xFFB9F0DC))),
+              Text(
+                  context.text('ريال سعودي · عينة توضيحية',
+                      'Saudi riyals · sample figures'),
+                  style:
+                      const TextStyle(fontSize: 12, color: Color(0xFFB9F0DC))),
             ]),
           ),
           const SizedBox(height: 24),
           _heading(context.text('تفاصيل الكشف', 'Payslip breakdown')),
-          _card(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            _row(context.text('الراتب الأساسي', 'Basic salary'), '6,000.00'),
-            _row(context.text('بدل السكن', 'Housing allowance'), '1,000.00'),
-            _row(context.text('بدل النقل', 'Transport allowance'), '500.00'),
-            const Divider(),
-            _row(context.text('إجمالي المستحقات', 'Gross pay'), '7,500.00'),
-            _row(context.text('استقطاعات توضيحية', 'Illustrative deductions'), '500.00'),
-            const Divider(),
-            _row(context.text('الصافي', 'Net pay'), '7,000.00'),
-          ])),
-          Text(context.text(
-            'أرقام افتراضية لعرض شكل الكشف، ولا تمثل مسير راتب فعليًا أو احتسابًا نظاميًا للاستقطاعات.',
-            'Fictional figures to demonstrate a payslip. They do not represent actual payroll or statutory deduction calculations.',
-          ), style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+          _card(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                _row(
+                    context.text('الراتب الأساسي', 'Basic salary'), '6,000.00'),
+                _row(
+                    context.text('بدل السكن', 'Housing allowance'), '1,000.00'),
+                _row(
+                    context.text('بدل النقل', 'Transport allowance'), '500.00'),
+                const Divider(),
+                _row(context.text('إجمالي المستحقات', 'Gross pay'), '7,500.00'),
+                _row(
+                    context.text(
+                        'استقطاعات توضيحية', 'Illustrative deductions'),
+                    '500.00'),
+                const Divider(),
+                _row(context.text('الصافي', 'Net pay'), '7,000.00'),
+              ])),
+          Text(
+              context.text(
+                'أرقام افتراضية لعرض شكل الكشف، ولا تمثل مسير راتب فعليًا أو احتسابًا نظاميًا للاستقطاعات.',
+                'Fictional figures to demonstrate a payslip. They do not represent actual payroll or statutory deduction calculations.',
+              ),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant)),
         ],
       );
 
@@ -385,41 +466,60 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _heading(context.text('حساب الموظف', 'Employee account')),
-          _card(child: Column(
+          _card(
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Align(child: Container(
+              Align(
+                  child: Container(
                 padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer, shape: BoxShape.circle),
-                child: Icon(Icons.person_outline_rounded, size: 42, color: Theme.of(context).colorScheme.primary),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    shape: BoxShape.circle),
+                child: Icon(Icons.person_outline_rounded,
+                    size: 42, color: Theme.of(context).colorScheme.primary),
               )),
               const SizedBox(height: 16),
-              Text(context.text('موظف تجريبي', 'Demo employee'), textAlign: TextAlign.center,
+              Text(context.text('موظف تجريبي', 'Demo employee'),
+                  textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.titleLarge),
-              Text(context.text('شركة تجريبية', 'Demo company'), textAlign: TextAlign.center,
-                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+              Text(context.text('شركة تجريبية', 'Demo company'),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant)),
               const SizedBox(height: 16),
               const Divider(),
               _row(context.text('الرقم الوظيفي', 'Employee ID'), 'DEMO-001'),
-              _row(context.text('نوع الحساب', 'Account type'), context.text('حساب توضيحي', 'Demo account')),
+              _row(context.text('نوع الحساب', 'Account type'),
+                  context.text('حساب توضيحي', 'Demo account')),
             ],
           )),
           const SizedBox(height: 8),
-          _heading(context.text('التفضيلات والخصوصية', 'Preferences and privacy')),
-          _serviceTile(Icons.language,
+          _heading(
+              context.text('التفضيلات والخصوصية', 'Preferences and privacy')),
+          _serviceTile(
+              Icons.language,
               context.text('Switch to English', 'التبديل إلى العربية'),
-              context.text('لغة العرض', 'Display language'), widget.onToggleLanguage),
+              context.text('لغة العرض', 'Display language'),
+              widget.onToggleLanguage),
           const SizedBox(height: 12),
-          _serviceTile(Icons.privacy_tip_outlined, context.text('الخصوصية', 'Privacy'),
-              context.text('كيف تتعامل التجربة مع بياناتك', 'How the demo handles your data'),
-              () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const PrivacyScreen()))),
+          _serviceTile(
+              Icons.privacy_tip_outlined,
+              context.text('الخصوصية', 'Privacy'),
+              context.text('كيف تتعامل التجربة مع بياناتك',
+                  'How the demo handles your data'),
+              () => Navigator.of(context).push(MaterialPageRoute<void>(
+                  builder: (_) => const PrivacyScreen()))),
           const SizedBox(height: 24),
           OutlinedButton.icon(
             key: const Key('sign-out'),
-            onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
-            style: OutlinedButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.error),
+            onPressed: () =>
+                Navigator.of(context).popUntil((route) => route.isFirst),
+            style: OutlinedButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error),
             icon: const Icon(Icons.logout, size: 20),
-            label: Text(context.text('خروج ومسح التجربة', 'Sign out and clear demo')),
+            label: Text(
+                context.text('خروج ومسح التجربة', 'Sign out and clear demo')),
           ),
         ],
       );
@@ -433,17 +533,28 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
             foregroundColor: Colors.white,
             backgroundColor: AppTheme.navy,
             systemOverlayStyle: SystemUiOverlayStyle.light,
-            flexibleSpace: Container(decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [Color(0xFF219D8E), Color(0xFF0E655D)],
-                begin: AlignmentDirectional.topStart, end: AlignmentDirectional.bottomEnd),
+            flexibleSpace: Container(
+                decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Color(0xFF14796F), Color(0xFF0E655D)],
+                  begin: AlignmentDirectional.topStart,
+                  end: AlignmentDirectional.bottomEnd),
             )),
             title: Row(mainAxisSize: MainAxisSize.min, children: [
               const BrandMark(size: 34),
               const SizedBox(width: 10),
-              Flexible(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text('Way33', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
-                Text(context.text('مساحة الموظف', 'Employee workspace'), style: const TextStyle(fontSize: 11, color: Color(0xFFD2EFE8))),
-              ])),
+              Flexible(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    const Text('Way33',
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.w700)),
+                    if (MediaQuery.textScalerOf(context).scale(11) <= 14)
+                    Text(context.text('مساحة الموظف', 'Employee workspace'),
+                        style: const TextStyle(
+                            fontSize: 11, color: Color(0xFFE3F6F1))),
+                  ])),
             ]),
             actions: [
               IconButton(
@@ -463,10 +574,10 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 9),
                   color: Theme.of(context).colorScheme.secondaryContainer,
                   child: Text(
-                    context.text(
-                        'نسخة تجريبية · البيانات لا تُرسل للشركة',
+                    context.text('نسخة تجريبية · البيانات لا تُرسل للشركة',
                         'Demo · No data is sent to your company'),
-                    style: TextStyle(fontSize: 11,
+                    style: TextStyle(
+                        fontSize: 11,
                         color:
                             Theme.of(context).colorScheme.onSecondaryContainer),
                   ),
@@ -493,7 +604,10 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           ),
           bottomNavigationBar: NavigationBar(
             selectedIndex: _selected,
-            onDestinationSelected: (value) => setState(() => _selected = value),
+            onDestinationSelected: (value) {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              setState(() => _selected = value);
+            },
             destinations: [
               NavigationDestination(
                   icon: const Icon(Icons.home_outlined),

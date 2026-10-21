@@ -34,14 +34,12 @@ void main() {
   testWidgets('live company selection never asks for unsupported credentials',
       (tester) async {
     await tester.pumpWidget(const WayErpApp(initialLocale: Locale('en')));
-    await tester.tap(find.text('Continue'));
-    await tester.pumpAndSettle();
+    await tapVisible(tester, find.text('Continue'));
     expect(
         find.text('Enter a valid company domain using HTTPS.'), findsOneWidget);
     await tester.enterText(
         find.byKey(const Key('company-domain')), 'acme.example.com');
-    await tester.tap(find.text('Continue'));
-    await tester.pumpAndSettle();
+    await tapVisible(tester, find.text('Continue'));
     expect(find.text('Company domain selected'), findsOneWidget);
     expect(find.byType(TextField), findsNothing);
     expect(find.textContaining('has not been verified'), findsOneWidget);
@@ -143,7 +141,7 @@ void main() {
           Icons.payments_outlined,
           Icons.person_outline
         ]) {
-          await tester.tap(find.byIcon(icon));
+          await tester.tap(find.descendant(of: find.byType(NavigationBar), matching: find.byIcon(icon)));
           await tester.pumpAndSettle();
           expect(tester.takeException(), isNull);
         }
