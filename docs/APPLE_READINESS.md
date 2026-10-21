@@ -8,8 +8,10 @@ Distribution requested: TestFlight, then public App Store. The owner reports an 
 - A privacy notice reachable before demo entry and from the employee account. It describes this offline, session-only demo; it is not a policy for a live ERP service.
 - An app `PrivacyInfo.xcprivacy` included in the Runner Resources phase. It declares no tracking or data collection for the current demo. SDK privacy manifests must also be present in the built app; the iOS CI job checks the bundle.
 - App Transport Security retains HTTPS restrictions. The export-compliance flag declares no non-exempt encryption for current standard transport/platform cryptography; reassess if custom cryptography is introduced.
-- CI uses macOS and Xcode 26, verifies iOS SDK >=26, runs the real employee flow on iPhone/iPad simulators, captures screenshots and builds an **unsigned** iOS release archive.
+- CI uses macOS and Xcode 26, verifies iOS SDK >=26, and builds an **unsigned** iOS release archive. Independent iPhone/iPad jobs are configured to run the actual app's demo flow and capture screenshots; job configuration alone is not proof that both devices passed.
 - Widget previews are development renders. Native simulator screenshots are separately labeled. Neither set represents a production ERP connection or physical-device certification.
+
+Verified so far: Xcode 26.3 / iOS SDK 26.2 release archive, bundled app/SDK privacy manifests, 22 unit/widget tests, 24 host previews and an earlier native iPhone flow with 28 screenshots. Simulator startup has exceeded the original 10-minute limit on some runners; the latest workflow gives each device its own runner and 20-minute capture step. See [revision-specific results](../UPLOAD_STATUS.md) for status and artifacts. This is preparation for submission, not confirmation of Apple compliance or approval.
 
 ## Before signing or submission
 
@@ -24,7 +26,7 @@ Distribution requested: TestFlight, then public App Store. The owner reports an 
 | Published privacy/support | Owner identity, public privacy-policy URL, support URL/contact, retention and deletion procedure are still required. Update the in-app notice and App Store privacy answers for live data and all SDKs. |
 | Deletion / authentication | No account creation or social login exists today. Reassess account-deletion and login requirements if those features are added. |
 | Artwork | Replace Flutter launcher artwork with approved Way33 assets; keep the 1024px App Store icon opaque. |
-| Screenshots | Use accepted, current App Store Connect display slots. Target iPhone 16 Pro (1206×2622) and iPad Pro 13-inch (2064×2752), Arabic/English, from the real running app. Regenerate after any UI/data change; exclude development renders from final store metadata. |
+| Screenshots | Use accepted, current App Store Connect display slots. Target iPhone 16 Pro (1206×2622) and iPad Pro 13-inch (2064×2752), Arabic/English, from the real running app. Regenerate after any UI/data change, verify opaque PNG/JPEG exports and exclude host development renders from final store metadata. |
 | Store metadata | Confirm localized name/description/category, current age-rating questionnaire, distribution countries and applicable agreements/compliance. |
 | Device testing | Test on physical iPhone/iPad, including VoiceOver, large text, offline/error handling and real sign-in/out before submitting. Simulator/build success is not Apple approval. |
 
