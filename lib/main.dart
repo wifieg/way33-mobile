@@ -6,27 +6,42 @@ import 'features/onboarding/company_screen.dart';
 void main() => runApp(const WayErpApp());
 
 class WayErpApp extends StatefulWidget {
-  const WayErpApp({super.key});
+  final Locale initialLocale;
+  final ThemeMode themeMode;
+  final TargetPlatform? platform;
+
+  const WayErpApp({
+    super.key,
+    this.initialLocale = const Locale('ar'),
+    this.themeMode = ThemeMode.system,
+    this.platform,
+  });
   @override
   State<WayErpApp> createState() => _WayErpAppState();
 }
 
 class _WayErpAppState extends State<WayErpApp> {
-  Locale locale = const Locale('ar');
+  late Locale locale = widget.initialLocale;
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'Way ERP', debugShowCheckedModeBanner: false,
-    theme: AppTheme.light(),
-    locale: locale,
-    supportedLocales: const [Locale('ar'), Locale('en')],
-    localizationsDelegates: const [
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
-    ],
-    home: CompanyScreen(
-      locale: locale,
-      onToggleLanguage: () => setState(() => locale = locale.languageCode == 'ar' ? const Locale('en') : const Locale('ar')),
-    ),
-  );
+        title: 'Way ERP',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light().copyWith(platform: widget.platform),
+        darkTheme: AppTheme.dark().copyWith(platform: widget.platform),
+        themeMode: widget.themeMode,
+        locale: locale,
+        supportedLocales: const [Locale('ar'), Locale('en')],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        home: CompanyScreen(
+          locale: locale,
+          onToggleLanguage: () => setState(() => locale =
+              locale.languageCode == 'ar'
+                  ? const Locale('en')
+                  : const Locale('ar')),
+        ),
+      );
 }

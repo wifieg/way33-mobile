@@ -1,0 +1,173 @@
+name: Flutter employee app
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze-and-test:
+    concurrency:
+      group: flutter-analysis-${{ github.head_ref || github.ref_name }}
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.7'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Prepare formatted source evidence
+        run: |
+          dart format lib test integration_test test_driver
+          git diff -- lib test integration_test test_driver > /tmp/way33-format.patch
+      - uses: actions/upload-artifact@v4
+        with:
+          name: way33-source-preparation
+          path: |
+            /tmp/way33-format.patch
+            pubspec.lock
+      - run: flutter analyze
+      - run: flutter test
+      - run: flutter test test/preview_capture_test.dart --dart-define=CAPTURE_PREVIEWS=true
+        if: always()
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: way33-widget-previews
+          path: artifacts/widget-previews
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - run: flutter build apk --debug --dart-define=DEMO_MODE=true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: way33-employee-demo-android
+          path: build/app/outputs/flutter-apk/app-debug.apk
+  ios-archive:
+    concurrency:
+      group: flutter-ios-archive-${{ github.head_ref || github.ref_name }}
+      cancel-in-progress: false
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '26'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.7'
+          channel: stable
+          cache: true
+      - name: Verify Apple SDK baseline
+        run: |
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+          python3 - <<'PY'
+          import subprocess
+          sdk = subprocess.check_output(['xcrun', '--sdk', 'iphoneos', '--show-sdk-version'], text=True).strip()
+          assert int(sdk.split('.')[0]) >= 26, sdk
+          PY
+      - run: flutter pub get
+      - name: Build unsigned iOS release archive
+        run: flutter build ipa --release --no-codesign --dart-define=DEMO_MODE=true
+      - name: Check bundled privacy manifests
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import plistlib
+          app = Path('build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app')
+          root = app / 'PrivacyInfo.xcprivacy'
+          assert root.is_file(), 'App privacy manifest missing from built bundle'
+          with root.open('rb') as handle:
+              manifest = plistlib.load(handle)
+          assert manifest['NSPrivacyTracking'] is False
+          manifests = list(app.rglob('PrivacyInfo.xcprivacy'))
+          for path in manifests:
+              with path.open('rb') as handle:
+                  plistlib.load(handle)
+              print(path.relative_to(app))
+          assert any('shared_preferences' in str(path) for path in manifests), 'Preferences SDK manifest missing'
+          PY
+      - name: Package unsigned archive
+        run: ditto -c -k --sequesterRsrc --keepParent build/ios/archive/Runner.xcarchive artifacts/Way33-unsigned.xcarchive.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: way33-ios-unsigned-archive
+          path: artifacts/Way33-unsigned.xcarchive.zip
+  ios-previews:
+    strategy:
+      fail-fast: false
+      matrix:
+        device: [iphone, ipad]
+    concurrency:
+      group: flutter-ios-previews-${{ github.head_ref || github.ref_name }}-${{ matrix.device }}
+      cancel-in-progress: false
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '26'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.7'
+          channel: stable
+          cache: false
+      - name: Prepare simulator log-readiness fix
+        run: python3 scripts/prepare_ios_capture_tool.py
+      - name: Verify Apple SDK baseline
+        run: |
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+          python3 - <<'PY'
+          import subprocess
+          sdk = subprocess.check_output(['xcrun', '--sdk', 'iphoneos', '--show-sdk-version'], text=True).strip()
+          assert int(sdk.split('.')[0]) >= 26, sdk
+          PY
+      - run: flutter pub get
+      - name: Configure screenshot simulators
+        run: |
+          mkdir -p artifacts
+          xcrun simctl list --json > artifacts/simulator-inventory.json
+          python3 scripts/ios_simulators.py
+      - name: Run employee flow and capture native screenshots
+        timeout-minutes: 20
+        env:
+          SCREENSHOT_DEVICE: ${{ matrix.device }}
+        run: |
+          if [ "$SCREENSHOT_DEVICE" = iphone ]; then
+            export WAY33_SIMULATOR="$WAY33_IPHONE"
+          else
+            export WAY33_SIMULATOR="$WAY33_IPAD"
+          fi
+          echo "WAY33_SIMULATOR=$WAY33_SIMULATOR" >> "$GITHUB_ENV"
+          xcrun simctl boot "$WAY33_SIMULATOR"
+          python3 -c 'import os,subprocess; subprocess.run(["xcrun","simctl","bootstatus",os.environ["WAY33_SIMULATOR"],"-b"],check=True,timeout=240)'
+          xcrun simctl status_bar "$WAY33_SIMULATOR" override --time '9:41' --batteryState charged --batteryLevel 100
+          set -o pipefail
+          flutter drive --verbose --driver=test_driver/preview_driver.dart --target=integration_test/employee_preview_test.dart -d "$WAY33_SIMULATOR" --dart-define=DEMO_MODE=true --dart-define=SCREENSHOT_DEVICE="$SCREENSHOT_DEVICE" 2>&1 | tee "artifacts/$SCREENSHOT_DEVICE-drive.log"
+          xcrun simctl shutdown "$WAY33_SIMULATOR"
+      - name: Preserve native device frame for diagnosis
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import os, subprocess
+          for key in ('WAY33_SIMULATOR',):
+              if os.environ.get(key):
+                  subprocess.run(['xcrun', 'simctl', 'io', os.environ[key], 'screenshot', f'artifacts/{key.lower()}-device.png'], timeout=60, check=False)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: way33-ios-simulator-${{ matrix.device }}
+          path: artifacts/

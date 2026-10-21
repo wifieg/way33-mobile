@@ -5,6 +5,7 @@
 .pub-cache/
 build/
 coverage/
+artifacts/
 .idea/
 *.iml
 **/local.properties
