@@ -141,7 +141,8 @@ void main() {
           Icons.payments_outlined,
           Icons.person_outline
         ]) {
-          await tester.tap(find.descendant(of: find.byType(NavigationBar), matching: find.byIcon(icon)));
+          await tester.tap(find.descendant(
+              of: find.byType(NavigationBar), matching: find.byIcon(icon)));
           await tester.pumpAndSettle();
           expect(tester.takeException(), isNull);
         }

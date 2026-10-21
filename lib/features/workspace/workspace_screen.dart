@@ -551,9 +551,9 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
                         style: TextStyle(
                             fontSize: 22, fontWeight: FontWeight.w700)),
                     if (MediaQuery.textScalerOf(context).scale(11) <= 14)
-                    Text(context.text('مساحة الموظف', 'Employee workspace'),
-                        style: const TextStyle(
-                            fontSize: 11, color: Color(0xFFE3F6F1))),
+                      Text(context.text('مساحة الموظف', 'Employee workspace'),
+                          style: const TextStyle(
+                              fontSize: 11, color: Color(0xFFE3F6F1))),
                   ])),
             ]),
             actions: [
