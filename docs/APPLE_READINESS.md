@@ -11,7 +11,7 @@ Distribution requested: TestFlight, then public App Store. The owner reports an 
 - CI uses macOS and Xcode 26, verifies iOS SDK >=26, and builds an **unsigned** iOS release archive. Independent iPhone/iPad jobs are configured to run the actual app's demo flow and capture screenshots; job configuration alone is not proof that both devices passed.
 - Widget previews are development renders. Native simulator screenshots are separately labeled. Neither set represents a production ERP connection or physical-device certification.
 
-Verified so far: Xcode 26.3 / iOS SDK 26.2 release archive, bundled app/SDK privacy manifests, 22 unit/widget tests, 24 host previews and an earlier native iPhone flow with 28 screenshots. Simulator startup has exceeded the original 10-minute limit on some runners; the latest workflow gives each device its own runner and 20-minute capture step. See [revision-specific results](../UPLOAD_STATUS.md) for status and artifacts. This is preparation for submission, not confirmation of Apple compliance or approval.
+Verified so far: Xcode 26.3 / iOS SDK 26.2 release archive, bundled app/SDK privacy manifests, 22 unit/widget tests, 24 host previews and an earlier native iPhone flow with 28 screenshots. Native retries stalled before test execution even after allowing more startup time. Logs match Flutter issue #181771; simulator jobs now use a version-checked backport of the official log-readiness fix, isolated from release builds and SDK caches. See the [tool workaround](../scripts/patches/README.md). See [revision-specific results](../UPLOAD_STATUS.md) for status and artifacts. This is preparation for submission, not confirmation of Apple compliance or approval.
 
 ## Before signing or submission
 

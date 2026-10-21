@@ -122,7 +122,9 @@ jobs:
         with:
           flutter-version: '3.35.7'
           channel: stable
-          cache: true
+          cache: false
+      - name: Prepare simulator log-readiness fix
+        run: python3 scripts/prepare_ios_capture_tool.py
       - name: Verify Apple SDK baseline
         run: |
           xcodebuild -version
