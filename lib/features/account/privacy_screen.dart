@@ -18,7 +18,8 @@ class PrivacyScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      context.text('خصوصية النسخة التجريبية', 'Demo privacy notice'),
+                      context.text(
+                          'خصوصية النسخة التجريبية', 'Demo privacy notice'),
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 24),

@@ -3,8 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:way_erp_mobile/main.dart';
 
 Future<void> enterDemo(WidgetTester tester) async {
+  await tester.ensureVisible(find.text('Explore demo'));
   await tester.tap(find.text('Explore demo'));
   await tester.pumpAndSettle();
+  await tester.ensureVisible(find.text('Enter demo account'));
   await tester.tap(find.text('Enter demo account'));
   await tester.pumpAndSettle();
 }

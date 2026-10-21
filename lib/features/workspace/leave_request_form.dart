@@ -46,7 +46,7 @@ class _LeaveRequestFormState extends State<LeaveRequestForm> {
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 600),
-                child: Form(
+                child: Card(child: Padding(padding: const EdgeInsets.all(22), child: Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -100,7 +100,7 @@ class _LeaveRequestFormState extends State<LeaveRequestForm> {
                       ),
                     ],
                   ),
-                ),
+                ))),
               ),
             ),
           ),

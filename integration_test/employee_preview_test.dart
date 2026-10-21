@@ -11,7 +11,8 @@ void main() {
       testWidgets('iOS employee preview $language ${dark ? 'dark' : 'light'}',
           (tester) async {
         final arabic = language == 'ar';
-        const device = String.fromEnvironment('SCREENSHOT_DEVICE', defaultValue: 'iphone');
+        const device =
+            String.fromEnvironment('SCREENSHOT_DEVICE', defaultValue: 'iphone');
         final prefix = '$device-$language-${dark ? 'dark' : 'light'}';
         await tester.pumpWidget(WayErpApp(
           key: UniqueKey(),
@@ -32,26 +33,32 @@ void main() {
         }
 
         await capture('company');
-        await tap(find.text(arabic ? 'استكشاف النسخة التجريبية' : 'Explore demo'));
-        await tap(find.text(arabic ? 'دخول الحساب التجريبي' : 'Enter demo account'));
+        await tap(
+            find.text(arabic ? 'استكشاف النسخة التجريبية' : 'Explore demo'));
+        await tap(
+            find.text(arabic ? 'دخول الحساب التجريبي' : 'Enter demo account'));
         await capture('home');
         await tap(find.text(arabic ? 'طلباتي' : 'Requests'));
         await capture('requests');
-        await tap(find.text(arabic ? 'طلب إجازة تجريبي' : 'Demo leave request'));
+        await tap(
+            find.text(arabic ? 'طلب إجازة تجريبي' : 'Demo leave request'));
         await capture('leave-form');
         await tester.enterText(find.byKey(const Key('leave-days')), '3');
         await tester.enterText(find.byKey(const Key('leave-reason')),
             arabic ? 'زيارة عائلية' : 'Family visit');
         FocusManager.instance.primaryFocus?.unfocus();
         await tester.pumpAndSettle();
-        await tap(find.text(arabic ? 'حفظ الطلب التجريبي' : 'Save demo request'));
+        await tap(
+            find.text(arabic ? 'حفظ الطلب التجريبي' : 'Save demo request'));
         expect(find.textContaining('DEMO-1'), findsOneWidget);
         await tap(find.text(arabic ? 'الراتب' : 'Salary'));
         await capture('salary');
         await tap(find.text(arabic ? 'حسابي' : 'Account'));
         await capture('account');
         await tap(find.text(arabic ? 'الخصوصية' : 'Privacy'));
-        expect(find.text(arabic ? 'خصوصية النسخة التجريبية' : 'Demo privacy notice'),
+        expect(
+            find.text(
+                arabic ? 'خصوصية النسخة التجريبية' : 'Demo privacy notice'),
             findsOneWidget);
         await capture('privacy');
       });

@@ -51,9 +51,9 @@ jobs:
         with:
           name: way33-employee-demo-android
           path: build/app/outputs/flutter-apk/app-debug.apk
-  ios-verification:
+  ios-archive:
     runs-on: macos-15
-    timeout-minutes: 45
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
       - uses: maxim-lobanov/setup-xcode@v1
@@ -74,27 +74,6 @@ jobs:
           assert int(sdk.split('.')[0]) >= 26, sdk
           PY
       - run: flutter pub get
-      - name: Configure screenshot simulators
-        run: python3 scripts/ios_simulators.py
-      - name: Run iPhone flow and capture native screenshots
-        run: |
-          xcrun simctl boot "$WAY33_IPHONE"
-          xcrun simctl bootstatus "$WAY33_IPHONE" -b
-          xcrun simctl status_bar "$WAY33_IPHONE" override --time '9:41' --batteryState charged --batteryLevel 100
-          flutter drive --driver=test_driver/preview_driver.dart --target=integration_test/employee_preview_test.dart -d "$WAY33_IPHONE" --dart-define=DEMO_MODE=true --dart-define=SCREENSHOT_DEVICE=iphone
-          xcrun simctl shutdown "$WAY33_IPHONE"
-      - name: Run iPad flow and capture native screenshots
-        run: |
-          xcrun simctl boot "$WAY33_IPAD"
-          xcrun simctl bootstatus "$WAY33_IPAD" -b
-          xcrun simctl status_bar "$WAY33_IPAD" override --time '9:41' --batteryState charged --batteryLevel 100
-          flutter drive --driver=test_driver/preview_driver.dart --target=integration_test/employee_preview_test.dart -d "$WAY33_IPAD" --dart-define=DEMO_MODE=true --dart-define=SCREENSHOT_DEVICE=ipad
-          xcrun simctl shutdown "$WAY33_IPAD"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: way33-ios-simulator-screenshots
-          path: artifacts/ios-simulator-screenshots
       - name: Build unsigned iOS release archive
         run: flutter build ipa --release --no-codesign --dart-define=DEMO_MODE=true
       - name: Check bundled privacy manifests
@@ -121,3 +100,54 @@ jobs:
         with:
           name: way33-ios-unsigned-archive
           path: artifacts/Way33-unsigned.xcarchive.zip
+  ios-previews:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '26'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.7'
+          channel: stable
+          cache: true
+      - name: Verify Apple SDK baseline
+        run: |
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+          python3 - <<'PY'
+          import subprocess
+          sdk = subprocess.check_output(['xcrun', '--sdk', 'iphoneos', '--show-sdk-version'], text=True).strip()
+          assert int(sdk.split('.')[0]) >= 26, sdk
+          PY
+      - run: flutter pub get
+      - name: Configure screenshot simulators
+        run: |
+          mkdir -p artifacts
+          xcrun simctl list --json > artifacts/simulator-inventory.json
+          python3 scripts/ios_simulators.py
+      - name: Run iPhone flow and capture native screenshots
+        timeout-minutes: 10
+        run: |
+          xcrun simctl boot "$WAY33_IPHONE"
+          python3 -c 'import os,subprocess; subprocess.run(["xcrun","simctl","bootstatus",os.environ["WAY33_IPHONE"],"-b"],check=True,timeout=240)'
+          xcrun simctl status_bar "$WAY33_IPHONE" override --time '9:41' --batteryState charged --batteryLevel 100
+          set -o pipefail
+          flutter drive --driver=test_driver/preview_driver.dart --target=integration_test/employee_preview_test.dart -d "$WAY33_IPHONE" --dart-define=DEMO_MODE=true --dart-define=SCREENSHOT_DEVICE=iphone 2>&1 | tee artifacts/iphone-drive.log
+          xcrun simctl shutdown "$WAY33_IPHONE"
+      - name: Run iPad flow and capture native screenshots
+        timeout-minutes: 10
+        run: |
+          xcrun simctl boot "$WAY33_IPAD"
+          python3 -c 'import os,subprocess; subprocess.run(["xcrun","simctl","bootstatus",os.environ["WAY33_IPAD"],"-b"],check=True,timeout=240)'
+          xcrun simctl status_bar "$WAY33_IPAD" override --time '9:41' --batteryState charged --batteryLevel 100
+          set -o pipefail
+          flutter drive --driver=test_driver/preview_driver.dart --target=integration_test/employee_preview_test.dart -d "$WAY33_IPAD" --dart-define=DEMO_MODE=true --dart-define=SCREENSHOT_DEVICE=ipad 2>&1 | tee artifacts/ipad-drive.log
+          xcrun simctl shutdown "$WAY33_IPAD"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: way33-ios-simulator-screenshots
+          path: artifacts/

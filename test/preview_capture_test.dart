@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -18,8 +17,9 @@ void main() {
         final loader = FontLoader('Way33Sans')
           ..addFont(rootBundle.load('assets/fonts/NotoSansArabic.ttf'));
         await loader.load();
-        debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-        addTearDown(() => debugDefaultTargetPlatformOverride = null);
+        final icons = FontLoader('MaterialIcons')
+          ..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf'));
+        await icons.load();
         tester.view.physicalSize = const Size(1320, 2868);
         tester.view.devicePixelRatio = 3;
         tester.view.padding = const FakeViewPadding(top: 186, bottom: 102);
@@ -35,14 +35,15 @@ void main() {
             key: UniqueKey(),
             initialLocale: Locale(language),
             themeMode: dark ? ThemeMode.dark : ThemeMode.light,
+            platform: TargetPlatform.iOS,
           ),
         ));
         await tester.pumpAndSettle();
 
         Future<void> capture(String name) async {
           expect(tester.takeException(), isNull);
-          final boundary = root.currentContext!.findRenderObject()!
-              as RenderRepaintBoundary;
+          final boundary =
+              root.currentContext!.findRenderObject()! as RenderRepaintBoundary;
           await tester.runAsync(() async {
             final image = await boundary.toImage(pixelRatio: 3);
             final data = await image.toByteData(format: ui.ImageByteFormat.png);
@@ -61,15 +62,17 @@ void main() {
         }
 
         await capture('company');
-        await tap(find.text(arabic ? 'استكشاف النسخة التجريبية' : 'Explore demo'));
-        await tap(find.text(arabic ? 'دخول الحساب التجريبي' : 'Enter demo account'));
+        await tap(
+            find.text(arabic ? 'استكشاف النسخة التجريبية' : 'Explore demo'));
+        await tap(
+            find.text(arabic ? 'دخول الحساب التجريبي' : 'Enter demo account'));
         await capture('home');
         await tap(find.text(arabic ? 'طلباتي' : 'Requests'));
         await capture('requests');
-        await tap(find.text(arabic ? 'طلب إجازة تجريبي' : 'Demo leave request'));
+        await tap(
+            find.text(arabic ? 'طلب إجازة تجريبي' : 'Demo leave request'));
         await capture('leave-form');
-        await tester.pageBack();
-        await tester.pumpAndSettle();
+        await tap(find.byType(BackButton));
         await tap(find.text(arabic ? 'الراتب' : 'Salary'));
         await capture('salary');
         await tap(find.text(arabic ? 'حسابي' : 'Account'));

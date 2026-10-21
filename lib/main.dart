@@ -8,11 +8,13 @@ void main() => runApp(const WayErpApp());
 class WayErpApp extends StatefulWidget {
   final Locale initialLocale;
   final ThemeMode themeMode;
+  final TargetPlatform? platform;
 
   const WayErpApp({
     super.key,
     this.initialLocale = const Locale('ar'),
     this.themeMode = ThemeMode.system,
+    this.platform,
   });
   @override
   State<WayErpApp> createState() => _WayErpAppState();
@@ -24,8 +26,8 @@ class _WayErpAppState extends State<WayErpApp> {
   Widget build(BuildContext context) => MaterialApp(
         title: 'Way ERP',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.light(),
-        darkTheme: AppTheme.dark(),
+        theme: AppTheme.light().copyWith(platform: widget.platform),
+        darkTheme: AppTheme.dark().copyWith(platform: widget.platform),
         themeMode: widget.themeMode,
         locale: locale,
         supportedLocales: const [Locale('ar'), Locale('en')],

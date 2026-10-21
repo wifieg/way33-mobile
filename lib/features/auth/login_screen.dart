@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/localization/app_text.dart';
+import '../../core/theme/app_theme.dart';
 import '../onboarding/company_connection.dart';
 import '../workspace/workspace_screen.dart';
 
@@ -25,10 +26,14 @@ class LoginScreen extends StatelessWidget {
               padding: const EdgeInsets.all(24),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 480),
-                child: Column(
+                child: Card(child: Padding(padding: const EdgeInsets.all(26), child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Icon(Icons.lock_outline, size: 56),
+                    Align(child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(color: AppTheme.green.withValues(alpha: .1), shape: BoxShape.circle),
+                      child: const Icon(Icons.lock_outline_rounded, size: 36, color: AppTheme.green),
+                    )),
                     const SizedBox(height: 24),
                     Text(
                       company == null
@@ -72,7 +77,7 @@ class LoginScreen extends StatelessWidget {
                           'Back to company selection')),
                     ),
                   ],
-                ),
+                ))),
               ),
             ),
           ),
